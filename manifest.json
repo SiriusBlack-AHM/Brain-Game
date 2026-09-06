@@ -26,12 +26,12 @@
     {
       "src": "Ss1.png",
       "sizes": "1080x2066",
-      "type": "image"
+      "type": "png"
     },
     {
       "src": "Ss2.png",
       "sizes": "1080x2010",
-      "type": "image"
+      "type": "png"
     }
   ]
 }
