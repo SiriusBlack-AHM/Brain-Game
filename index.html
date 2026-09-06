@@ -1,0 +1,1457 @@
+<!-- থিসিস: উষ্ণ ক্রিম কাগজের খাতা শৈলী, পোড়ামাটি অ্যাকসেন্ট, ২px গাঢ় বর্ডার, ৪px শক্ত ছায়া এবং খাঁটি বাংলা হরফ -->
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>মাথা ঘামাও: অফলাইন ব্রেন ও মেমোরি গেমস</title>
+  <meta name="theme-color" content="#C85A32" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' fill='%23C85A32'/><rect x='80' y='80' width='140' height='140' rx='16' fill='%23F4EFE6'/><rect x='292' y='80' width='140' height='140' rx='16' fill='%23F4EFE6'/><rect x='80' y='292' width='140' height='140' rx='16' fill='%23F4EFE6'/><rect x='292' y='292' width='140' height='140' rx='16' fill='%23F4EFE6'/></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@600;700;800&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23C85A32'/><path d='M8 8h6v6H8zm10 0h6v6h-6zM8 18h6v6H8zm10 0h6v6h-6z' fill='%23F4EFE6'/></svg>" />
+  <style>
+    :root {
+      --bg: #F4EFE6;
+      --bg-surface: #FFFFFF;
+      --bg-alt: #EBE3D5;
+      --ink: #201A16;
+      --ink-muted: #6B625B;
+      --accent: #C85A32;
+      --accent-hover: #AF4A25;
+      --accent-tint: #FBEFEA;
+      --border-color: #201A16;
+      --line: #DFD7CA;
+      --success: #2E7D32;
+      --danger: #C62828;
+      --radius: 4px;
+      --shadow: 4px 4px 0px var(--border-color);
+      --shadow-sm: 2px 2px 0px var(--border-color);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--ink);
+      font-family: 'Hind Siliguri', -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 720px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* খাতার স্পাইন হেডার */
+    header {
+      background: var(--bg-surface);
+      border: 2px solid var(--border-color);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-left: 8px solid var(--accent);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 36px;
+      height: 36px;
+      background: var(--accent);
+      border: 2px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFF;
+      flex-shrink: 0;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .brand-text h1 {
+      font-family: 'Anek Bangla', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 0;
+      line-height: 1.1;
+      color: var(--ink);
+    }
+
+    .brand-text span {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      border: 2px solid var(--border-color);
+      background: var(--bg-surface);
+      box-shadow: var(--shadow-sm);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--ink);
+      transition: all 140ms ease;
+    }
+
+    .icon-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: none;
+    }
+
+    /* গেম নেভিগেশন ট্যাব */
+    .game-tabs-scroll {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+    .game-tabs-scroll::-webkit-scrollbar { display: none; }
+
+    .tab-btn {
+      flex-shrink: 0;
+      padding: 8px 14px;
+      background: var(--bg-surface);
+      border: 2px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+      border-radius: var(--radius);
+      font-family: 'Anek Bangla', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 140ms ease;
+    }
+
+    .tab-btn.active {
+      background: var(--ink);
+      color: var(--bg);
+      transform: translate(2px, 2px);
+      box-shadow: none;
+    }
+
+    /* স্কোরবোর্ড ও ড্যাশবোর্ড */
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .stat-box {
+      background: var(--bg-surface);
+      border: 2px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+      border-radius: var(--radius);
+      padding: 8px 10px;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink-muted);
+    }
+
+    .stat-value {
+      font-family: 'Anek Bangla', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--ink);
+      line-height: 1.2;
+    }
+
+    .stat-value.highlight {
+      color: var(--accent);
+    }
+
+    /* গেম এরিয়া খোলস */
+    .board-wrapper {
+      background: var(--bg-surface);
+      border: 2px solid var(--border-color);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      padding: 20px;
+      position: relative;
+      min-height: 420px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* বাটন ও কন্ট্রোলস */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 18px;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: 'Anek Bangla', sans-serif;
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius);
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: all 140ms ease;
+      user-select: none;
+    }
+
+    .btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: none;
+    }
+
+    .btn-primary { background: var(--accent); color: #FFF; }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-outline { background: var(--bg-surface); color: var(--ink); }
+    .btn-outline:hover { background: var(--bg-alt); }
+    .btn-success { background: var(--success); color: #FFF; }
+    .btn-danger { background: var(--danger); color: #FFF; }
+
+    .controls-panel {
+      width: 100%;
+      background: var(--bg-surface);
+      border: 2px solid var(--border-color);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .diff-group {
+      display: flex;
+      gap: 4px;
+      background: var(--bg);
+      padding: 4px;
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius);
+    }
+
+    .diff-btn {
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      font-family: 'Anek Bangla', sans-serif;
+      border: none;
+      background: transparent;
+      color: var(--ink);
+      cursor: pointer;
+      border-radius: 2px;
+    }
+
+    .diff-btn.active {
+      background: var(--ink);
+      color: var(--bg);
+    }
+
+    /* গেম ১: মেমোরি কার্ড গ্রিড */
+    .cards-grid {
+      display: grid;
+      gap: 10px;
+      width: 100%;
+      max-width: 520px;
+      perspective: 1000px;
+    }
+    .grid-easy { grid-template-columns: repeat(4, 1fr); }
+    .grid-medium { grid-template-columns: repeat(4, 1fr); }
+    .grid-hard { grid-template-columns: repeat(5, 1fr); }
+
+    .card {
+      aspect-ratio: 1/1;
+      position: relative;
+      cursor: pointer;
+      transform-style: preserve-3d;
+      transition: transform 0.35s ease;
+      user-select: none;
+    }
+    .card.flipped, .card.matched { transform: rotateY(180deg); }
+    .card.matched .card-face-front {
+      border-color: var(--success);
+      background: #F1F8F2;
+    }
+
+    .card-face {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: var(--radius);
+      border: 2px solid var(--border-color);
+      box-shadow: 2px 2px 0px var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backface-visibility: hidden;
+    }
+
+    .card-face-back {
+      background: var(--bg-alt);
+      background-image: repeating-linear-gradient(45deg, var(--line) 0, var(--line) 2px, transparent 0, transparent 8px);
+    }
+
+    .card-face-front {
+      background: var(--bg-surface);
+      transform: rotateY(180deg);
+      color: var(--ink);
+    }
+
+    .card-icon {
+      width: 55%;
+      height: 55%;
+    }
+
+    /* গেম ২: প্যাটার্ন সিকোয়েন্স (Simon) */
+    .simon-board {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    .simon-pad {
+      aspect-ratio: 1/1;
+      border: 3px solid var(--border-color);
+      border-radius: var(--radius);
+      box-shadow: 4px 4px 0px var(--border-color);
+      cursor: pointer;
+      transition: all 120ms ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Anek Bangla', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .simon-pad:active, .simon-pad.lit {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px var(--border-color);
+      filter: brightness(1.35);
+    }
+
+    .pad-1 { background: #E57373; color: #FFF; }
+    .pad-2 { background: #64B5F6; color: #FFF; }
+    .pad-3 { background: #81C784; color: #FFF; }
+    .pad-4 { background: #FFB74D; color: #FFF; }
+
+    /* গেম ৩: স্ট্রুপ টেস্ট */
+    .stroop-arena {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      width: 100%;
+      max-width: 440px;
+    }
+
+    .stroop-word {
+      font-family: 'Anek Bangla', sans-serif;
+      font-size: 52px;
+      font-weight: 800;
+      border: 3px solid var(--border-color);
+      background: var(--bg-alt);
+      box-shadow: var(--shadow);
+      padding: 16px 36px;
+      border-radius: var(--radius);
+      width: 100%;
+    }
+
+    .stroop-buttons {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      width: 100%;
+    }
+
+    /* গেম ৪: সংখ্যা মেমোরি স্প্যান */
+    .span-arena {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      width: 100%;
+      max-width: 360px;
+    }
+
+    .span-display {
+      font-family: 'Anek Bangla', sans-serif;
+      font-size: 48px;
+      font-weight: 800;
+      letter-spacing: 4px;
+      border: 3px solid var(--border-color);
+      background: var(--bg-alt);
+      box-shadow: var(--shadow);
+      padding: 16px 20px;
+      border-radius: var(--radius);
+      width: 100%;
+      min-height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .keypad-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      width: 100%;
+    }
+
+    .keypad-btn {
+      padding: 12px;
+      font-family: 'Anek Bangla', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      background: var(--bg-surface);
+      border: 2px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+      border-radius: var(--radius);
+      cursor: pointer;
+    }
+
+    .keypad-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: none;
+    }
+
+    /* গেম ৫: স্লাইডিং পাজল */
+    .puzzle-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      width: 100%;
+      max-width: 320px;
+      background: var(--border-color);
+      padding: 6px;
+      border: 3px solid var(--border-color);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .puzzle-tile {
+      aspect-ratio: 1/1;
+      background: var(--bg-surface);
+      border: 2px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Anek Bangla', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      cursor: pointer;
+      user-select: none;
+      border-radius: 2px;
+    }
+
+    .puzzle-tile.empty {
+      background: var(--bg-alt);
+      border-color: transparent;
+      cursor: default;
+    }
+
+    /* গেম ৬: রিফ্লেক্স টাইমার */
+    .reflex-box {
+      width: 100%;
+      max-width: 440px;
+      height: 280px;
+      border: 3px solid var(--border-color);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      text-align: center;
+      padding: 20px;
+      user-select: none;
+      transition: background-color 100ms;
+    }
+
+    .reflex-box.wait { background: #E57373; color: #FFF; }
+    .reflex-box.ready { background: #81C784; color: #FFF; }
+    .reflex-box.idle { background: var(--bg-surface); color: var(--ink); }
+
+    .reflex-title {
+      font-family: 'Anek Bangla', sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+    }
+
+    /* সার্বিক মডাল ও ওভারলে */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(32, 26, 22, 0.65);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 180ms ease;
+    }
+
+    .modal-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: var(--bg-surface);
+      border: 3px solid var(--border-color);
+      box-shadow: 6px 6px 0px var(--border-color);
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 400px;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .modal-title {
+      font-family: 'Anek Bangla', sans-serif;
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 10px; }
+      .dashboard { grid-template-columns: repeat(2, 1fr); }
+      .controls-panel { flex-direction: column; align-items: stretch; }
+      .diff-group { justify-content: center; }
+    }
+  </style>
+<meta property="og:title" content="মস্তিষ্ক খাতা: ব্রেন ও মেমোরি গেমস">
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- হেডার -->
+    <header>
+      <div class="brand">
+        <div class="brand-logo" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <rect x="3" y="3" width="7" height="7" />
+            <rect x="14" y="3" width="7" height="7" />
+            <rect x="3" y="14" width="7" height="7" />
+            <rect x="14" y="14" width="7" height="7" />
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>মাথা ঘামাও</h1>
+          <span>ব্রেন টেস্ট ও মেমোরি ল্যাব (অফলাইন)</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="pwaInstallBtn" class="btn btn-outline" style="display:none; padding:6px 10px; font-size:12px;" title="অ্যাপ ইনস্টল করুন">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          ইনস্টল
+        </button>
+        <button id="soundToggleBtn" class="icon-btn" title="শব্দ চালু/বন্ধ" aria-label="শব্দ চালু/বন্ধ">
+          <svg id="soundIconOn" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+          <svg id="soundIconOff" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <line x1="23" y1="9" x2="17" y2="15"></line>
+            <line x1="17" y1="9" x2="23" y2="15"></line>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- গেম নেভিগেশন (৬টি গেম) -->
+    <nav class="game-tabs-scroll" aria-label="গেম তালিকা">
+      <button class="tab-btn active" data-game="memory">১. মেমোরি কার্ড</button>
+      <button class="tab-btn" data-game="simon">২. প্যাটার্ন সিকোয়েন্স</button>
+      <button class="tab-btn" data-game="stroop">৩. কালার স্ট্রুপ</button>
+      <button class="tab-btn" data-game="span">৪. সংখ্যা স্প্যান</button>
+      <button class="tab-btn" data-game="puzzle">৫. স্লাইড পাজল</button>
+      <button class="tab-btn" data-game="reflex">৬. রিফ্লেক্স টাইমার</button>
+    </nav>
+
+    <!-- স্কোরবোর্ড -->
+    <section class="dashboard">
+      <div class="stat-box">
+        <div class="stat-label" id="label1">চাল / লেভেল</div>
+        <div id="statVal1" class="stat-value">০</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label" id="label2">অবশিষ্ট / টার্গেট</div>
+        <div id="statVal2" class="stat-value highlight">৬</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label" id="label3">সময়</div>
+        <div id="statVal3" class="stat-value">০০:০০</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label" id="label4">সেরা রেকর্ড</div>
+        <div id="statVal4" class="stat-value">-</div>
+      </div>
+    </section>
+
+    <!-- কন্ট্রোল ও সেটিংস প্যানেল -->
+    <section class="controls-panel">
+      <div class="diff-group" id="diffGroup">
+        <button class="diff-btn active" data-diff="easy">সহজ</button>
+        <button class="diff-btn" data-diff="medium">মাঝারি</button>
+        <button class="diff-btn" data-diff="hard">কঠিন</button>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <button id="gameActionBtn" class="btn btn-primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M23 4v6h-6"></path>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+          </svg>
+          নতুন খেলা
+        </button>
+      </div>
+    </section>
+
+    <!-- মূল গেম এরিয়া -->
+    <main class="board-wrapper" id="mainArena">
+      <!-- গেম কনটেন্ট জাভাস্ক্রিপ্ট দিয়ে যুক্ত হবে -->
+    </main>
+  </div>
+
+  <!-- ফলাফল মডাল -->
+  <div id="gameModal" class="modal-backdrop" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <h2 id="modalTitle" class="modal-title">চমৎকার!</h2>
+      <p id="modalDesc" style="color: var(--ink-muted); margin-bottom: 16px; font-size: 14px;">আপনি দারুণ দক্ষতায় খেলা সম্পন্ন করেছেন।</p>
+      <div id="modalScoreDetails" style="background: var(--bg); border: 2px solid var(--border-color); padding: 12px; margin-bottom: 18px; border-radius: var(--radius); font-weight: 700;"></div>
+      <button id="modalPlayAgain" class="btn btn-primary" style="width: 100%;">আবার খেলুন</button>
+    </div>
+  </div>
+
+  <script>
+    // লোকাল স্টোরেজ মোড়ক
+    const store = (() => {
+      let mem = {}
+      try {
+        localStorage.setItem('__t', '1'); localStorage.removeItem('__t')
+        return {
+          get: (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d } catch { return d } },
+          set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)) } catch {} },
+        }
+      } catch {
+        return { get: (k, d) => (k in mem ? mem[k] : d), set: (k, v) => { mem[k] = v } }
+      }
+    })()
+
+    // বাংলা সংখ্যা রূপান্তর
+    const bnNum = (num) => {
+      const bnDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯']
+      return String(num).replace(/\d/g, d => bnDigits[d])
+    }
+
+    // ওয়েব অডিও সিন্থেসাইজার
+    const Sound = (() => {
+      let ctx = null
+      let enabled = store.get('sound_enabled', true)
+
+      function init() {
+        if (!ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext
+          if (AudioContext) ctx = new AudioContext()
+        }
+      }
+
+      function playTone(freq, type = 'sine', duration = 0.1, gainVal = 0.15) {
+        if (!enabled) return
+        try {
+          init()
+          if (!ctx) return
+          if (ctx.state === 'suspended') ctx.resume()
+          const osc = ctx.createOscillator()
+          const gain = ctx.createGain()
+          osc.type = type
+          osc.frequency.setValueAtTime(freq, ctx.currentTime)
+          gain.gain.setValueAtTime(gainVal, ctx.currentTime)
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration)
+          osc.connect(gain)
+          gain.connect(ctx.destination)
+          osc.start()
+          osc.stop(ctx.currentTime + duration)
+        } catch (e) {}
+      }
+
+      return {
+        toggle: () => {
+          enabled = !enabled
+          store.set('sound_enabled', enabled)
+          return enabled
+        },
+        isEnabled: () => enabled,
+        click: () => playTone(440, 'triangle', 0.06, 0.1),
+        success: () => {
+          playTone(523.25, 'sine', 0.1, 0.2)
+          setTimeout(() => playTone(659.25, 'sine', 0.15, 0.2), 80)
+        },
+        fail: () => {
+          playTone(220, 'sawtooth', 0.15, 0.1)
+          setTimeout(() => playTone(180, 'sawtooth', 0.2, 0.1), 100)
+        },
+        simonTone: (idx) => {
+          const freqs = [329.63, 392.00, 440.00, 523.25]
+          playTone(freqs[idx % freqs.length], 'sine', 0.2, 0.25)
+        },
+        win: () => {
+          [440, 554, 659, 880].forEach((f, i) => {
+            setTimeout(() => playTone(f, 'triangle', 0.25, 0.2), i * 90)
+          })
+        }
+      }
+    })()
+
+    // SVG আইকন
+    const SVG_GLYPHS = [
+      '<svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>',
+      '<svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>',
+      '<svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="3"/><line x1="12" y1="22" x2="12" y2="8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/></svg>',
+      '<svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-1.5 1.5L14 9l-3-3-4 4 1.5 1.5L7 13l-4 4v4h4l4-4 1.5 1.5L15 17l-3-3 3.5-3.5 1.5 1.5 2-2z"/></svg>',
+      '<svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>',
+      '<svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12a15.3 15.3 0 0 1 10-4 15.3 15.3 0 0 1 10 4 15.3 15.3 0 0 1-10 4 15.3 15.3 0 0 1-10-4z"/></svg>',
+      '<svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></svg>',
+      '<svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+      '<svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',
+      '<svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>'
+    ]
+
+    // বর্তমান গেম স্টেট
+    let currentGame = 'memory'
+    let currentDiff = 'easy'
+    let timerSec = 0
+    let timerInterval = null
+
+    // DOM Elements
+    const mainArena = document.getElementById('mainArena')
+    const statVal1 = document.getElementById('statVal1')
+    const statVal2 = document.getElementById('statVal2')
+    const statVal3 = document.getElementById('statVal3')
+    const statVal4 = document.getElementById('statVal4')
+    const label1 = document.getElementById('label1')
+    const label2 = document.getElementById('label2')
+    const label3 = document.getElementById('label3')
+    const label4 = document.getElementById('label4')
+    const diffGroup = document.getElementById('diffGroup')
+    const gameActionBtn = document.getElementById('gameActionBtn')
+    const soundToggleBtn = document.getElementById('soundToggleBtn')
+    const soundIconOn = document.getElementById('soundIconOn')
+    const soundIconOff = document.getElementById('soundIconOff')
+    const gameModal = document.getElementById('gameModal')
+    const modalTitle = document.getElementById('modalTitle')
+    const modalDesc = document.getElementById('modalDesc')
+    const modalScoreDetails = document.getElementById('modalScoreDetails')
+    const modalPlayAgain = document.getElementById('modalPlayAgain')
+
+    function formatTime(s) {
+      const m = Math.floor(s / 60)
+      const sec = s % 60
+      return `${bnNum(String(m).padStart(2, '0'))}:${bnNum(String(sec).padStart(2, '0'))}`
+    }
+
+    function resetTimer() {
+      clearInterval(timerInterval)
+      timerSec = 0
+      statVal3.textContent = formatTime(0)
+    }
+
+    function startTimer() {
+      resetTimer()
+      timerInterval = setInterval(() => {
+        timerSec++
+        statVal3.textContent = formatTime(timerSec)
+      }, 1000)
+    }
+
+    function stopTimer() {
+      clearInterval(timerInterval)
+    }
+
+    function showModal(title, desc, details) {
+      modalTitle.textContent = title
+      modalDesc.textContent = desc
+      modalScoreDetails.innerHTML = details
+      gameModal.classList.add('open')
+      Sound.win()
+    }
+
+    modalPlayAgain.addEventListener('click', () => {
+      gameModal.classList.remove('open')
+      initCurrentGame()
+    })
+
+    // সাউন্ড আইকন কন্ট্রোল
+    soundToggleBtn.addEventListener('click', () => {
+      const state = Sound.toggle()
+      soundIconOn.style.display = state ? 'block' : 'none'
+      soundIconOff.style.display = state ? 'none' : 'block'
+      if (state) Sound.click()
+    })
+
+    // গেম ট্যাব সুইচ
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
+        btn.classList.add('active')
+        currentGame = btn.dataset.game
+        initCurrentGame()
+      })
+    })
+
+    // PWA ইনস্টল ও সার্ভিস ওয়ার্কার হ্যান্ডলার
+    let deferredPrompt;
+    const pwaInstallBtn = document.getElementById('pwaInstallBtn');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      if (pwaInstallBtn) pwaInstallBtn.style.display = 'inline-flex';
+    });
+
+    if (pwaInstallBtn) {
+      pwaInstallBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          const { outcome } = await deferredPrompt.userChoice;
+          if (outcome === 'accepted') {
+            pwaInstallBtn.style.display = 'none';
+          }
+          deferredPrompt = null;
+        }
+      });
+    }
+
+    window.addEventListener('load', () => {
+      try {
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('sw.js').catch(() => {});
+        }
+      } catch (e) {}
+    });
+
+    // ডিফিকাল্টি সুইচ
+    diffGroup.querySelectorAll('.diff-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        diffGroup.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'))
+        btn.classList.add('active')
+        currentDiff = btn.dataset.diff
+        initCurrentGame()
+      })
+    })
+
+    gameActionBtn.addEventListener('click', () => {
+      initCurrentGame()
+    })
+
+    // ==========================================
+    // ১. মেমোরি কার্ড গেম
+    // ==========================================
+    const MemoryGame = {
+      deck: [],
+      flipped: [],
+      matched: 0,
+      moves: 0,
+      totalPairs: 6,
+      lock: false,
+
+      start() {
+        diffGroup.style.display = 'flex'
+        label1.textContent = 'চাল'
+        label2.textContent = 'অবশিষ্ট জোড়া'
+        label3.textContent = 'সময়'
+        label4.textContent = 'সেরা রেকর্ড'
+
+        const pairCounts = { easy: 6, medium: 8, hard: 10 }
+        this.totalPairs = pairCounts[currentDiff] || 6
+        this.matched = 0
+        this.moves = 0
+        this.flipped = []
+        this.lock = false
+
+        statVal1.textContent = bnNum(0)
+        statVal2.textContent = bnNum(this.totalPairs)
+        
+        const best = store.get(`mem_best_${currentDiff}`, null)
+        statVal4.textContent = best ? `${bnNum(best.moves)} চাল` : '-'
+
+        // কার্ড তৈরি
+        const selected = SVG_GLYPHS.slice(0, this.totalPairs)
+        const list = []
+        selected.forEach((svg, idx) => {
+          list.push({ id: idx, svg })
+          list.push({ id: idx, svg })
+        })
+        list.sort(() => Math.random() - 0.5)
+        this.deck = list
+
+        const gridClass = this.totalPairs === 6 ? 'grid-easy' : (this.totalPairs === 8 ? 'grid-medium' : 'grid-hard')
+        mainArena.innerHTML = `<div class="cards-grid ${gridClass}" id="cardsBox"></div>`
+        const box = document.getElementById('cardsBox')
+
+        this.deck.forEach((card, idx) => {
+          const el = document.createElement('div')
+          el.className = 'card'
+          el.innerHTML = `
+            <div class="card-face card-face-back"></div>
+            <div class="card-face card-face-front">${card.svg}</div>
+          `
+          el.addEventListener('click', () => this.handleFlip(el, idx))
+          box.appendChild(el)
+        })
+
+        startTimer()
+      },
+
+      handleFlip(el, idx) {
+        if (this.lock || el.classList.contains('flipped') || el.classList.contains('matched')) return
+
+        el.classList.add('flipped')
+        Sound.click()
+        this.flipped.push({ el, idx, id: this.deck[idx].id })
+
+        if (this.flipped.length === 2) {
+          this.moves++
+          statVal1.textContent = bnNum(this.moves)
+          this.lock = true
+
+          const [first, second] = this.flipped
+          if (first.id === second.id) {
+            Sound.success()
+            first.el.classList.add('matched')
+            second.el.classList.add('matched')
+            this.matched++
+            statVal2.textContent = bnNum(this.totalPairs - this.matched)
+            this.flipped = []
+            this.lock = false
+
+            if (this.matched === this.totalPairs) {
+              stopTimer()
+              const bestKey = `mem_best_${currentDiff}`
+              const prevBest = store.get(bestKey, null)
+              if (!prevBest || this.moves < prevBest.moves) {
+                store.set(bestKey, { moves: this.moves, time: timerSec })
+              }
+              showModal('অভিনন্দন!', 'সবগুলো মেমোরি কার্ড সঠিকভাবে মিলিয়েছেন।', `মোট চাল: ${bnNum(this.moves)} টি<br>সময় লেগেছে: ${formatTime(timerSec)}`)
+            }
+          } else {
+            Sound.fail()
+            setTimeout(() => {
+              first.el.classList.remove('flipped')
+              second.el.classList.remove('flipped')
+              this.flipped = []
+              this.lock = false
+            }, 800)
+          }
+        }
+      }
+    }
+
+    // ==========================================
+    // ২. প্যাটার্ন সিকোয়েন্স (Simon)
+    // ==========================================
+    const SimonGame = {
+      sequence: [],
+      userStep: 0,
+      score: 0,
+      acceptingInput: false,
+
+      start() {
+        diffGroup.style.display = 'none'
+        label1.textContent = 'রাউন্ড / স্কোর'
+        label2.textContent = 'টার্গেট ধাপ'
+        label3.textContent = 'অবস্থা'
+        label4.textContent = 'সেরা স্কোর'
+
+        this.sequence = []
+        this.score = 0
+        statVal1.textContent = bnNum(0)
+        statVal2.textContent = bnNum(1)
+        statVal3.textContent = 'অপেক্ষা...'
+        
+        const best = store.get('simon_best', 0)
+        statVal4.textContent = `${bnNum(best)} রাউন্ড`
+
+        mainArena.innerHTML = `
+          <div class="simon-board">
+            <div class="simon-pad pad-1" data-id="0">১</div>
+            <div class="simon-pad pad-2" data-id="1">২</div>
+            <div class="simon-pad pad-3" data-id="2">৩</div>
+            <div class="simon-pad pad-4" data-id="3">৪</div>
+          </div>
+        `
+
+        document.querySelectorAll('.simon-pad').forEach(pad => {
+          pad.addEventListener('click', () => this.handlePad(parseInt(pad.dataset.id)))
+        })
+
+        setTimeout(() => this.nextRound(), 600)
+      },
+
+      nextRound() {
+        this.acceptingInput = false
+        this.userStep = 0
+        this.sequence.push(Math.floor(Math.random() * 4))
+        statVal1.textContent = bnNum(this.score)
+        statVal2.textContent = bnNum(this.sequence.length)
+        statVal3.textContent = 'মনোযোগ দিন'
+
+        let i = 0
+        const interval = setInterval(() => {
+          if (i >= this.sequence.length) {
+            clearInterval(interval)
+            this.acceptingInput = true
+            statVal3.textContent = 'আপনার চাল'
+            return
+          }
+          this.lightPad(this.sequence[i])
+          i++
+        }, 650)
+      },
+
+      lightPad(id) {
+        const pads = document.querySelectorAll('.simon-pad')
+        const pad = pads[id]
+        if (!pad) return
+        pad.classList.add('lit')
+        Sound.simonTone(id)
+        setTimeout(() => pad.classList.remove('lit'), 350)
+      },
+
+      handlePad(id) {
+        if (!this.acceptingInput) return
+        this.lightPad(id)
+
+        if (id === this.sequence[this.userStep]) {
+          this.userStep++
+          if (this.userStep === this.sequence.length) {
+            this.score++
+            Sound.success()
+            const best = store.get('simon_best', 0)
+            if (this.score > best) store.set('simon_best', this.score)
+            setTimeout(() => this.nextRound(), 900)
+          }
+        } else {
+          Sound.fail()
+          this.acceptingInput = false
+          showModal('ভুল সিকোয়েন্স!', 'প্যাটার্ন মিলল না। আবার চেষ্টা করুন।', `আপনার মোট স্কোর: ${bnNum(this.score)} রাউন্ড`)
+        }
+      }
+    }
+
+    // ==========================================
+    // ৩. কালার স্ট্রুপ টেস্ট
+    // ==========================================
+    const StroopGame = {
+      colors: [
+        { name: 'লাল', code: '#C62828' },
+        { name: 'নীল', code: '#1565C0' },
+        { name: 'সবুজ', code: '#2E7D32' },
+        { name: 'হলুদ', code: '#F57F17' }
+      ],
+      score: 0,
+      total: 10,
+      currentStep: 0,
+      currentColorIdx: 0,
+
+      start() {
+        diffGroup.style.display = 'none'
+        label1.textContent = 'সঠিক উত্তর'
+        label2.textContent = 'প্রশ্ন নম্বর'
+        label3.textContent = 'সময়'
+        label4.textContent = 'সেরা স্কোর'
+
+        this.score = 0
+        this.currentStep = 0
+        statVal1.textContent = bnNum(0)
+        statVal2.textContent = `${bnNum(1)}/${bnNum(this.total)}`
+        
+        const best = store.get('stroop_best', 0)
+        statVal4.textContent = `${bnNum(best)}/${bnNum(this.total)}`
+
+        startTimer()
+        this.nextQuestion()
+      },
+
+      nextQuestion() {
+        if (this.currentStep >= this.total) {
+          stopTimer()
+          const best = store.get('stroop_best', 0)
+          if (this.score > best) store.set('stroop_best', this.score)
+          showModal('স্ট্রুপ টেস্ট সমাপ্ত!', 'লেখা নয়, রঙের দিকে নজর রাখার দারুণ পরীক্ষা।', `সঠিক উত্তর: ${bnNum(this.score)} / ${bnNum(this.total)}<br>সময়: ${formatTime(timerSec)}`)
+          return
+        }
+
+        this.currentStep++
+        statVal2.textContent = `${bnNum(this.currentStep)}/${bnNum(this.total)}`
+
+        const wordIdx = Math.floor(Math.random() * this.colors.length)
+        let colorIdx = Math.floor(Math.random() * this.colors.length)
+        this.currentColorIdx = colorIdx
+
+        mainArena.innerHTML = `
+          <div class="stroop-arena">
+            <p style="font-size: 14px; font-weight:700; color:var(--ink-muted);">শব্দের অর্থ নয়, <strong>রংটি</strong> বেছে নিন:</p>
+            <div class="stroop-word" style="color: ${this.colors[colorIdx].code};">
+              ${this.colors[wordIdx].name}
+            </div>
+            <div class="stroop-buttons" id="stroopBtns"></div>
+          </div>
+        `
+
+        const btnBox = document.getElementById('stroopBtns')
+        this.colors.forEach((c, idx) => {
+          const btn = document.createElement('button')
+          btn.className = 'btn btn-outline'
+          btn.style.fontSize = '16px'
+          btn.textContent = c.name
+          btn.addEventListener('click', () => {
+            if (idx === this.currentColorIdx) {
+              this.score++
+              statVal1.textContent = bnNum(this.score)
+              Sound.success()
+            } else {
+              Sound.fail()
+            }
+            this.nextQuestion()
+          })
+          btnBox.appendChild(btn)
+        })
+      }
+    }
+
+    // ==========================================
+    // ৪. সংখ্যা মেমোরি স্প্যান
+    // ==========================================
+    const SpanGame = {
+      level: 3,
+      currentNum: '',
+      userNum: '',
+
+      start() {
+        diffGroup.style.display = 'none'
+        label1.textContent = 'লেভেল (ডিজিট)'
+        label2.textContent = 'অবস্থা'
+        label3.textContent = 'ফলাফল'
+        label4.textContent = 'সর্বোচ্চ লেভেল'
+
+        this.level = 3
+        this.userNum = ''
+        statVal1.textContent = bnNum(this.level)
+        statVal2.textContent = 'প্রস্তুত হন'
+        statVal3.textContent = '-'
+        
+        const best = store.get('span_best', 3)
+        statVal4.textContent = `${bnNum(best)} ডিজিট`
+
+        this.showSequence()
+      },
+
+      showSequence() {
+        this.userNum = ''
+        statVal1.textContent = bnNum(this.level)
+        statVal2.textContent = 'মনে রাখুন!'
+
+        let numStr = ''
+        for (let i = 0; i < this.level; i++) {
+          numStr += Math.floor(Math.random() * 10)
+        }
+        this.currentNum = numStr
+
+        mainArena.innerHTML = `
+          <div class="span-arena">
+            <p style="font-size: 13px; font-weight:700; color:var(--ink-muted);">সংখ্যাটি কিছুক্ষণ দেখানো হবে:</p>
+            <div class="span-display">${bnNum(this.currentNum)}</div>
+          </div>
+        `
+
+        setTimeout(() => {
+          this.renderInputUI()
+        }, 1500 + (this.level * 400))
+      },
+
+      renderInputUI() {
+        statVal2.textContent = 'টাইপ করুন'
+        mainArena.innerHTML = `
+          <div class="span-arena">
+            <div class="span-display" id="inputSpanDisplay">_</div>
+            <div class="keypad-grid">
+              ${[1,2,3,4,5,6,7,8,9, 'মুছুন', 0, 'জমা'].map(k => `<button class="keypad-btn" data-key="${k}">${typeof k === 'number' ? bnNum(k) : k}</button>`).join('')}
+            </div>
+          </div>
+        `
+
+        document.querySelectorAll('.keypad-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const val = btn.dataset.key
+            if (val === 'মুছুন') {
+              this.userNum = this.userNum.slice(0, -1)
+            } else if (val === 'জমা') {
+              this.verify()
+              return
+            } else {
+              if (this.userNum.length < this.level) {
+                this.userNum += val
+                Sound.click()
+              }
+            }
+            document.getElementById('inputSpanDisplay').textContent = this.userNum ? bnNum(this.userNum) : '_'
+          })
+        })
+      },
+
+      verify() {
+        if (this.userNum === this.currentNum) {
+          Sound.success()
+          this.level++
+          const best = store.get('span_best', 3)
+          if (this.level > best) store.set('span_best', this.level)
+          statVal3.textContent = 'সঠিক!'
+          setTimeout(() => this.showSequence(), 800)
+        } else {
+          Sound.fail()
+          showModal('ভুল সংখ্যা!', `আসল সংখ্যা ছিল: ${bnNum(this.currentNum)}`, `আপনি সফলভাবে ${bnNum(this.level - 1)} ডিজিট পর্যন্ত মনে রাখতে পেরেছেন।`)
+        }
+      }
+    }
+
+    // ==========================================
+    // ৫. স্লাইডিং পাজল (১৫ পাজলের ৮-টাইল রূপ)
+    // ==========================================
+    const PuzzleGame = {
+      board: [1, 2, 3, 4, 5, 6, 7, 8, 0],
+      moves: 0,
+
+      start() {
+        diffGroup.style.display = 'none'
+        label1.textContent = 'মোট চাল'
+        label2.textContent = 'টার্গেট'
+        label3.textContent = 'সময়'
+        label4.textContent = 'সেরা চাল'
+
+        this.moves = 0
+        statVal1.textContent = bnNum(0)
+        statVal2.textContent = '১ থেকে ৮ সাজানো'
+        
+        const best = store.get('puzzle_best', null)
+        statVal4.textContent = best ? `${bnNum(best)} চাল` : '-'
+
+        this.shuffle()
+        startTimer()
+        this.render()
+      },
+
+      shuffle() {
+        // সহজে সমাধানযোগ্য করতে র‍্যান্ডম বৈধ চাল দেওয়া
+        this.board = [1, 2, 3, 4, 5, 6, 7, 8, 0]
+        for (let i = 0; i < 80; i++) {
+          const emptyIdx = this.board.indexOf(0)
+          const neighbors = this.getNeighbors(emptyIdx)
+          const randMove = neighbors[Math.floor(Math.random() * neighbors.length)]
+          this.board[emptyIdx] = this.board[randMove]
+          this.board[randMove] = 0
+        }
+      },
+
+      getNeighbors(idx) {
+        const n = []
+        const row = Math.floor(idx / 3)
+        const col = idx % 3
+        if (row > 0) n.push(idx - 3)
+        if (row < 2) n.push(idx + 3)
+        if (col > 0) n.push(idx - 1)
+        if (col < 2) n.push(idx + 1)
+        return n
+      },
+
+      render() {
+        mainArena.innerHTML = `<div class="puzzle-grid" id="puzGrid"></div>`
+        const grid = document.getElementById('puzGrid')
+
+        this.board.forEach((val, idx) => {
+          const tile = document.createElement('div')
+          tile.className = `puzzle-tile ${val === 0 ? 'empty' : ''}`
+          tile.textContent = val !== 0 ? bnNum(val) : ''
+          tile.addEventListener('click', () => this.handleMove(idx))
+          grid.appendChild(tile)
+        })
+      },
+
+      handleMove(idx) {
+        const emptyIdx = this.board.indexOf(0)
+        const neighbors = this.getNeighbors(emptyIdx)
+        if (neighbors.includes(idx)) {
+          this.board[emptyIdx] = this.board[idx]
+          this.board[idx] = 0
+          this.moves++
+          statVal1.textContent = bnNum(this.moves)
+          Sound.click()
+          this.render()
+
+          if (this.checkWin()) {
+            stopTimer()
+            const prev = store.get('puzzle_best', null)
+            if (!prev || this.moves < prev) store.set('puzzle_best', this.moves)
+            showModal('অভিনন্দন!', 'স্লাইডিং পাজল সফলভাবে সাজিয়েছেন।', `মোট চাল: ${bnNum(this.moves)} টি<br>সময়: ${formatTime(timerSec)}`)
+          }
+        }
+      },
+
+      checkWin() {
+        for (let i = 0; i < 8; i++) {
+          if (this.board[i] !== i + 1) return false
+        }
+        return true
+      }
+    }
+
+    // ==========================================
+    // ৬. রিফ্লেক্স টাইমার (Reaction Speed)
+    // ==========================================
+    const ReflexGame = {
+      state: 'idle', // idle, wait, ready
+      startTime: 0,
+      timeoutId: null,
+
+      start() {
+        diffGroup.style.display = 'none'
+        label1.textContent = 'সর্বশেষ গতি'
+        label2.textContent = 'অবস্থা'
+        label3.textContent = 'সময়'
+        label4.textContent = 'দ্রুততম গতি'
+
+        statVal1.textContent = '-'
+        statVal2.textContent = 'শুরু করতে চাপুন'
+        statVal3.textContent = '-'
+        
+        const best = store.get('reflex_best', null)
+        statVal4.textContent = best ? `${bnNum(best)} ms` : '-'
+
+        this.state = 'idle'
+        this.renderBox()
+      },
+
+      renderBox() {
+        mainArena.innerHTML = `
+          <div class="reflex-box idle" id="reflexTapArea">
+            <h3 class="reflex-title">চাপুন শুরু করতে</h3>
+            <p style="font-size: 13px; margin-top: 8px;">লাল হলে অপেক্ষা করবেন, সবুজ হওয়ামাত্র দ্রুত ট্যাপ করবেন।</p>
+          </div>
+        `
+
+        const box = document.getElementById('reflexTapArea')
+        box.addEventListener('click', () => this.handleTap())
+      },
+
+      handleTap() {
+        const box = document.getElementById('reflexTapArea')
+        if (this.state === 'idle') {
+          this.state = 'wait'
+          box.className = 'reflex-box wait'
+          box.innerHTML = `<h3 class="reflex-title">সবুজ হওয়া পর্যন্ত অপেক্ষা করুন...</h3>`
+          statVal2.textContent = 'অপেক্ষা করুন'
+
+          const delay = 1500 + Math.random() * 2500
+          this.timeoutId = setTimeout(() => {
+            this.state = 'ready'
+            this.startTime = Date.now()
+            box.className = 'reflex-box ready'
+            box.innerHTML = `<h3 class="reflex-title">এখনই ট্যাপ করুন!</h3>`
+            statVal2.textContent = 'ট্যাপ!'
+          }, delay)
+        } else if (this.state === 'wait') {
+          clearTimeout(this.timeoutId)
+          this.state = 'idle'
+          Sound.fail()
+          box.className = 'reflex-box idle'
+          box.innerHTML = `<h3 class="reflex-title" style="color:var(--danger)">খুব দ্রুত চাপ দিয়েছেন!</h3><p style="font-size: 13px; margin-top: 8px;">সবুজ হওয়ার আগেই চেপেছেন। আবার চাপুন।</p>`
+        } else if (this.state === 'ready') {
+          const reactionTime = Date.now() - this.startTime
+          this.state = 'idle'
+          Sound.success()
+          statVal1.textContent = `${bnNum(reactionTime)} ms`
+          statVal2.textContent = 'সম্পন্ন'
+          
+          const best = store.get('reflex_best', null)
+          if (!best || reactionTime < best) {
+            store.set('reflex_best', reactionTime)
+            statVal4.textContent = `${bnNum(reactionTime)} ms`
+          }
+
+          box.className = 'reflex-box idle'
+          box.innerHTML = `
+            <h3 class="reflex-title">${bnNum(reactionTime)} মিলিসেকেন্ড!</h3>
+            <p style="font-size: 13px; margin-top: 8px;">দারুণ রিফ্লেক্স! পুনরায় পরীক্ষা করতে ট্যাপ করুন।</p>
+          `
+        }
+      }
+    }
+
+    // গেম ইনিশিয়ালাইজার
+    function initCurrentGame() {
+      resetTimer()
+      if (currentGame === 'memory') MemoryGame.start()
+      else if (currentGame === 'simon') SimonGame.start()
+      else if (currentGame === 'stroop') StroopGame.start()
+      else if (currentGame === 'span') SpanGame.start()
+      else if (currentGame === 'puzzle') PuzzleGame.start()
+      else if (currentGame === 'reflex') ReflexGame.start()
+    }
+
+    // শুরুতে মেমোরি গেম দিয়ে আরম্ভ
+    initCurrentGame()
+  </script>
+</body>
+</html>

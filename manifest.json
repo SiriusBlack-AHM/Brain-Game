@@ -1,0 +1,19 @@
+{
+  "name": "Offline Games: ব্রেন ও মেমোরি",
+  "short_name": "Offline Games",
+  "description": "ইন্টারনেট ছাড়াই সম্পূর্ণ অফলাইনে খেলুন মেমোরি ও ব্রেন গেমস।",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#F4EFE6",
+  "theme_color": "#C85A32",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' fill='%23C85A32'/><rect x='80' y='80' width='140' height='140' rx='16' fill='%23F4EFE6'/><rect x='292' y='80' width='140' height='140' rx='16' fill='%23F4EFE6'/><rect x='80' y='292' width='140' height='140' rx='16' fill='%23F4EFE6'/><rect x='292' y='292' width='140' height='140' rx='16' fill='%23F4EFE6'/></svg>",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
