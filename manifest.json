@@ -2,7 +2,7 @@
   "name": "Offline Games: ব্রেন ও মেমোরি",
   "short_name": "Offline Games",
   "description": "ইন্টারনেট ছাড়াই সম্পূর্ণ অফলাইনে খেলুন মেমোরি ও ব্রেন গেমস।",
-  "start_url": ".",
+  "start_url": "/",
   "scope": ".",
   "display": "standalone",
   "background_color": "#F4EFE6",
