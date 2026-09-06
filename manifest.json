@@ -25,12 +25,12 @@
   "screenshots": [
     {
       "src": "Ss1.png",
-      "sizes": "540x720",
+      "sizes": "1080x2066",
       "type": "image/png"
     },
     {
       "src": "Ss2.png",
-      "sizes": "540x720",
+      "sizes": "1080x2010",
       "type": "image/png"
     }
   ]
