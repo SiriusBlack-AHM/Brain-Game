@@ -3,8 +3,6 @@
   "short_name": "Offline Games",
   "description": "ইন্টারনেট ছাড়াই সম্পূর্ণ অফলাইনে খেলুন মেমোরি ও ব্রেন গেমস।",
 
-  "iarc_rating_id": "YOUR_REAL_IARC_ID_HERE",
-
   "id": "/Brain-Game/",
   "start_url": "/Brain-Game/",
   "scope": "/Brain-Game/",
